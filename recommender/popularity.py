@@ -19,8 +19,12 @@ def simple(csv: str, operation_column: str, ascending: Optional[bool] = False):
     return dataframe.sort_values(operation_column, ascending=ascending)
 
 
-def weighted_average(csv: str, operation_column: list, ascending: Optional[bool] = False,
-                     quantile: Optional[bool] = 0.70):
+def weighted_average(
+    csv: str,
+    operation_column: list,
+    ascending: Optional[bool] = False,
+    quantile: Optional[bool] = 0.70,
+):
     """
     # see algorithm on http://trailerpark.weebly.com/imdb-rating.html
     :param csv: csv file path location
@@ -36,8 +40,8 @@ def weighted_average(csv: str, operation_column: list, ascending: Optional[bool]
     C = dataframe[average].mean()
     m = dataframe[count].quantile(quantile)
     weighted = ((R * v) + (C * m)) / (v + m)
-    dataframe['weighted_average'] = weighted
-    return dataframe.sort_values('weighted_average', ascending=ascending)
+    dataframe["weighted_average"] = weighted
+    return dataframe.sort_values("weighted_average", ascending=ascending)
 
 
 def scale(dataframe: pd.DataFrame, dictionary: dict):
@@ -52,10 +56,10 @@ def scale(dataframe: pd.DataFrame, dictionary: dict):
     cols = list(dictionary.keys())
     scaler_fit = scaler.fit_transform(dataframe_cop[cols])
     scaled_df = pd.DataFrame(scaler_fit, columns=cols)
-    dataframe_cop.drop(cols, axis='columns', inplace=True)
+    dataframe_cop.drop(cols, axis="columns", inplace=True)
     dataframe_cop[cols] = scaled_df[cols]
     score = np.zeros((len(dataframe_cop)))
     for i in dictionary.items():
         score += (dataframe_cop[i[0]] * i[1]).values
-    dataframe_cop['score'] = score
+    dataframe_cop["score"] = score
     return dataframe_cop
